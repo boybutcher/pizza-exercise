@@ -4,31 +4,19 @@ class ToppingsContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      status: 'done',
+      isLoaded: false,
       toppings: [],
     }
-    this.statusChangeHandler = this.statusChangeHandler.bind(this);
     this.trackToppings = this.trackToppings.bind(this);
+    this.sortByCount = this.sortByCount.bind(this);
     this.fetchToppings = this.fetchToppings.bind(this);
-  }
-
-  statusChangeHandler(currentStatus) {
-    this.setState({
-      status: currentStatus,
-    });
   }
 
   trackToppings(arr) {
     let toppingTracker = {};
     arr.forEach(pizzaObj => {
-      const toppingsArr = pizzaObj.toppings;
-      toppingsArr.forEach(topping => {
-        if (toppingTracker[topping]) {
-          toppingTracker[topping]++;
-        } else {
-          toppingTracker[topping] = 1;
-        }
-      })
+      const comboName = pizzaObj.toppings.sort().join(', ');
+      toppingTracker[comboName] ? toppingTracker[comboName]++ : toppingTracker[comboName] = 1;
     })
     return toppingTracker;
   }
@@ -40,36 +28,30 @@ class ToppingsContainer extends Component {
         topping: topping,
         count: obj[topping],
       }
-      if (toppingsArr.length === 0) {
-        toppingsArr.push(toppingObj);
-      } else {
-        for (let i = 0; i < toppingsArr.length; i++) {
-          let currentItemCount = toppingsArr[i].count;
-          if (toppingObj.count > currentItemCount) {
-            toppingsArr.splice(i, 0, toppingObj);
-          }
-        }
-      }
+      toppingsArr.push(toppingObj);
     }
     return toppingsArr;
   }
 
-  fetchToppings() {
-    this.statusChangeHandler('fetching...');
-    fetch('http://files.olo.com/pizzas.json').then(response => {
-        return response.json();
-      }).then(data => {
-        this.statusChangeHandler('tallying...');
-        return this.trackToppings(data);
-      }).then(talliedObj => {
-        this.statusChangeHandler('parsing...');
-        return this.splinterToppingsToObjs(talliedObj);
-      }).then(unsortedToppingsArr => {
-        this.statusChangeHandler('sorting...');
-        console.log('unsortedToppingsArr: ', unsortedToppingsArr);
-      }).catch(error => {
-        this.statusChangeHandler('something went wrong!');
-      })
+  sortByCount(arr) {
+    return arr.sort((a, b) => {
+      return a.count - b.count;
+    }).slice(-20).reverse();
+  }
+
+  async fetchToppings() {
+    const data = await fetch('http://files.olo.com/pizzas.json')
+      .then(response => response.json())
+      .catch(error => 
+        console.error('error: ', error)
+      );
+    const talliedObj =  this.trackToppings(data);
+    const unsortedToppingsArr = this.splinterToppingsToObjs(talliedObj);
+    const sortedToppingsArr = this.sortByCount(unsortedToppingsArr);
+    this.setState({
+      toppings: sortedToppingsArr,
+      isLoaded: true,
+    })
   }
 
   componentWillMount() {
@@ -77,9 +59,22 @@ class ToppingsContainer extends Component {
   }
 
   render() {
+    const {
+      isLoaded, 
+      toppings,
+    } = this.state;
+    console.log(isLoaded, toppings);
+
+    const toppingContainer = (
+      <div>
+        topping container
+      </div>
+    )
+
+
     return (
       <div>
-        {this.state.status}
+        { isLoaded ? toppingContainer : <div>fetching...</div>  }
       </div>
     )
   }
