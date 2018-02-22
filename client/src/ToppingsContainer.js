@@ -65,6 +65,10 @@ class ToppingsContainer extends Component {
       toppings,
     } = this.state;
 
+    const loadingGif = (
+      <img src='https://media.giphy.com/media/sTUWqCKtxd01W/giphy.gif'/>
+    )
+
     const table = (
       <table className='toppings-container'>
         <thead>
@@ -84,7 +88,7 @@ class ToppingsContainer extends Component {
 
     return (
       <div className='topping-container'>
-        { isLoaded ? table : <div>fetching...</div>  }
+        { isLoaded ? table : loadingGif }
       </div>
     )
   }

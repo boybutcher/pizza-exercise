@@ -3,13 +3,16 @@ import React, { Component } from 'react';
 class ComboItem extends Component {
   render() {
     const {
-      topping,
-      count,
-    } = this.props.comboObj;
+      comboObj: {
+        topping,
+        count,
+      },
+      index,
+    } = this.props;
 
     return (
       <tr>
-        <td>{this.props.index}</td>
+        <td>{index}</td>
         <td>{topping}</td>
         <td>{count}</td>
       </tr>
