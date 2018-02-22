@@ -1,0 +1,13 @@
+.loading-screen {
+  display: flex;
+  width: 480px;
+  height: 360px;
+  align-items: center;
+  justify-content: center;
+}
+
+h3 {
+  -webkit-text-stroke: 1px black;
+  color: white;
+  outline-color: black;
+}

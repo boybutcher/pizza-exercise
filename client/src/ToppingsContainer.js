@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import ComboItem from './ComboItem.js';
+import './ToppingsContainer.css';
+
 
 class ToppingsContainer extends Component {
   constructor(props) {
@@ -66,7 +68,14 @@ class ToppingsContainer extends Component {
     } = this.state;
 
     const loadingGif = (
-      <img src='https://media.giphy.com/media/sTUWqCKtxd01W/giphy.gif'/>
+      <div 
+        className='loading-screen'
+        style={{backgroundImage: `url('https://media.giphy.com/media/sTUWqCKtxd01W/giphy.gif')`}}
+      >
+        <h3>
+          loading...
+        </h3>
+      </div>
     )
 
     const table = (
