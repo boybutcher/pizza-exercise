@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ComboItem from './ComboItem.js';
 
 class ToppingsContainer extends Component {
   constructor(props) {
@@ -63,18 +64,27 @@ class ToppingsContainer extends Component {
       isLoaded, 
       toppings,
     } = this.state;
-    console.log(isLoaded, toppings);
 
-    const toppingContainer = (
-      <div>
-        topping container
-      </div>
-    )
-
+    const table = (
+      <table className='toppings-container'>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>toppings combination </th>
+            <th>count</th>
+          </tr>
+        </thead>
+        <tbody>
+          {toppings.map((pizzaObj, index) => {
+            return <ComboItem index={index + 1} comboObj={pizzaObj} key={index}/>
+          })}
+        </tbody>
+      </table>
+    );
 
     return (
-      <div>
-        { isLoaded ? toppingContainer : <div>fetching...</div>  }
+      <div className='topping-container'>
+        { isLoaded ? table : <div>fetching...</div>  }
       </div>
     )
   }
